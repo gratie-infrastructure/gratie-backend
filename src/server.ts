@@ -3,11 +3,11 @@ import {join} from 'path';
 dotenv.config({path: join(process.cwd(), '.env')});
 import express, {Application} from 'express';
 import logger from './lib/logger';
-import redis from './lib/redis';
+// import redis from './lib/redis';
 import Middleware from './middleware';
 import {createServer} from 'http';
 
-redis.init();
+// redis.init();
 const port: string = process.env.PORT;
 const app: Application = express();
 const httpServer = createServer(app);
