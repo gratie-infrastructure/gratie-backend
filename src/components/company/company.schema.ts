@@ -1,13 +1,17 @@
-import { Schema, model, connect, Model } from 'mongoose';
+import { Schema, model, connect, Model, Types } from 'mongoose';
 import {ICompany} from '../company/company.interface'
 
 const optSchema = new Schema<ICompany>({
   
   name: { required: true, type: String},
   email: {type: String},
+  status: {type: String, enum: ['APPROVE', 'REJECT']},
   tier: {type: String},
+  valuation: {type: Types.Decimal128},
+  distribution: {type: Types.Decimal128},
+  tokenName: {type: String},
+  tokenSymbol: {type: String},
   walletAddr: {type: String},
-  companyNftId: {type: String}
 }, {timestamps: true});
 
 // export default model<IUser>('User', optSchema);

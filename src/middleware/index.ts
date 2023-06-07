@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import Route from './route';
 import {dbInit} from '../lib/db';
 import logger, {morganMiddleware} from '../lib/logger';
-import game, {init} from '../abstractions/auth';
+import {init} from '../abstractions/auth';
 
 const cors = require('cors');
 
@@ -27,23 +27,23 @@ export default class MiddleWare {
   }
 
   initRoutes() {
-    Route.init(this.app, this.getToken);
+    Route.init(this.app);
     this.app.use(this.errorHandler);
   }
 
-  async getToken(req:Request, res:Response, next:NextFunction) {
-    const token:string = req.headers.authorization;
-    if (token) {
-      try {
-        req.app.locals.user = await game.getUserByToken(token);
-        next();
-      } catch (err) {
-        next(err);
-      }
-    } else {
-      next(Error('Auth Token Needed!!'));
-    }
-  }
+  // async getToken(req:Request, res:Response, next:NextFunction) {
+  //   const token:string = req.headers.authorization;
+  //   if (token) {
+  //     try {
+  //       req.app.locals.user = await game.getUserByToken(token);
+  //       next();
+  //     } catch (err) {
+  //       next(err);
+  //     }
+  //   } else {
+  //     next(Error('Auth Token Needed!!'));
+  //   }
+  // }
 
   errorHandler(err:Error, req:Request, res:Response, next:NextFunction) {
     logger.debug(typeof next);

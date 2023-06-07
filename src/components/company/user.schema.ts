@@ -5,16 +5,13 @@ const optSchema = new Schema<IUser>({
   
   name: { required: true, type: String},
   email: {type: String},
-  lastLoginAt: Date,
-  status: {type: String, enum:['Approve', 'reject']},
-  tier: {type: String},
-  valuation: {type: String},
-  distributionPercentage : {type: String},
-  token:{type: String},
-  tokenName: {type: String},
-  tokenSymbol: {type: String},
+  status: {type: String, enum: ['APPROVE', 'REJECT']},
   walletAddr: {type: String},
-  companyNftId: {type: String}
+  companyId: {
+    type: Schema.Types.ObjectId, 
+    required: true,
+    ref: "Company"
+  }
 }, {timestamps: true});
 
 // export default model<IUser>('User', optSchema);
