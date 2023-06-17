@@ -12,6 +12,7 @@ const optSchema = new Schema<ICompany>({
   tokenName: {type: String},
   tokenSymbol: {type: String},
   walletAddr: {type: String},
+  fileLocationHash: {type: String},
 }, {timestamps: true});
 
 // export default model<IUser>('User', optSchema);

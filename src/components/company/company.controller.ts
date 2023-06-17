@@ -34,11 +34,39 @@ export default new class CompanyController {
         throw new Error('CompanyUser Already Exist');
       }
       const CompanyData = await Company.create(req.body);
-      sendEmail(req.body);
+      await this.createTransaction(req.body);
+      // sendEmail(req.body);
       return res.json({ data: CompanyData });
     } catch (err) {
       res.status(Util.status.internalError).json(Util.getErrorMsg(err));
     }
+  }
+
+  async updateCompanyUser(req: Request, res: Response) {
+    console.log("awalletAddr", req.body.walletAddr);
+    try {
+      const email = req.body?.email;
+      if (!email) {
+        throw new Error('Invalid Email Address');
+      }
+      const company = await Company.findOne({ email: email });
+      if (!company) {
+        throw new Error('Company Not Exist');
+      }
+      const CompanyData = await Company.findOneAndUpdate({walletAddr: req.body.walletAddr}, req.body);
+      // sendEmail(req.body);
+      return res.json({ data: CompanyData });
+    } catch (err) {
+      res.status(Util.status.internalError).json(Util.getErrorMsg(err));
+    }
+  }
+
+  async nftPurchase(req: Request, res: Response) {
+    return res.json({ purchaseSignature: 'sfgsdfg234234' });
+  }
+
+  async userApproval(req: Request, res: Response) {
+    return res.json({ purchaseSignature: 'sfgsdfg234234' });
   }
 
   async addUser(req: Request, res: Response) {
