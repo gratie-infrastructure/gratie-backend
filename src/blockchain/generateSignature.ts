@@ -44,7 +44,7 @@ async function generateSignature(
         data: [domain, types, data],
       }),
     };
-    const lambdaResponse = await (new AWS.Lambda().invoke(params).promise());
+    const lambdaResponse:any = await (new AWS.Lambda().invoke(params).promise());
     const payload:any = JSON.parse(lambdaResponse.Payload);
     if (!payload.body) {
       return {

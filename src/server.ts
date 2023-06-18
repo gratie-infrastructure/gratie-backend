@@ -6,6 +6,9 @@ import logger from './lib/logger';
 // import redis from './lib/redis';
 import Middleware from './middleware';
 import {createServer} from 'http';
+import contractEventListener from './blockchain/events/eventListeners';
+
+console.log("test", contractEventListener());
 
 // redis.init();
 const port: string = process.env.PORT;

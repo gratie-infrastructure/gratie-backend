@@ -1,4 +1,4 @@
-import ethers from 'ethers';
+import {ethers} from 'ethers';
 import contractABI from '../abi/gratie.abi.json';
 import 'dotenv/config';
 

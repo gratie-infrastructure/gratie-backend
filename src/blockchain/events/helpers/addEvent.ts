@@ -1,9 +1,9 @@
-import ethers from 'ethers';
+import {ethers} from 'ethers';
 import contractABI from '../abi/gratie.abi.json';
 const contractIface = new ethers.utils.Interface(contractABI);
 
 
-async function addEvent(event, eventName, wasMissed = false) {
+async function addEvent(event:any, eventName:string, wasMissed = false) {
   try {
     if (!wasMissed) {
       const decodedEventData = contractIface.decodeEventLog(

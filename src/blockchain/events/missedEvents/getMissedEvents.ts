@@ -2,13 +2,13 @@ import getPastEvents from './getPastEvents';
 import addEvent from '../helpers/addEvent';
 
 
-async function getMissedEvents(eventName, startBlockNumber = 0) {
+async function getMissedEvents(eventName: string, startBlockNumber = 0) {
   try {
     const response = await getPastEvents(eventName, startBlockNumber);
     // const transactionHashes = [];
 
     for (const event of response.events) {
-      await addEvent(event, true);
+      await addEvent(event, eventName, true);
       // if (response) {
       //     transactionHashes.push(event.transactionHash);
       // }

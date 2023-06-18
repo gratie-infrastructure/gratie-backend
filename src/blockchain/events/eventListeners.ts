@@ -1,4 +1,4 @@
-import ethers from 'ethers';
+import {ethers} from 'ethers';
 import eventFilters from './helpers/eventFilters';
 import addEvent from './helpers/addEvent';
 import getMissedEvents from './missedEvents/getMissedEvents';
@@ -11,7 +11,6 @@ const webSocketUrl: any = process.env.WEB_SOCKET_URL;
 let provider: any;
 // Tracks total websocket disconnects.
 let totalWebsocketDisconnects = 0;
-
 
 /**
  * @description Gets all missed events and adds them to db when websocket connection restarts.
@@ -35,7 +34,8 @@ async function getAllMissedEvents() {
 }
 
 
-async function contractEventListener() {
+export default async function contractEventListener() {
+  console.log('coming in contractEventListener');
   try {
     provider = new ethers.providers.WebSocketProvider(webSocketUrl);
 
@@ -60,47 +60,47 @@ async function contractEventListener() {
       // Listen to contract events here.
       console.log('Listening to gratie contract events...');
 
-      provider.on(eventFilters.BusinessNftTierAdded, (event) => {
+      provider.on(eventFilters.BusinessNftTierAdded, (event: any) => {
         // add event to db
         addEvent(event, 'BusinessNftTierAdded');
       });
-      provider.on(eventFilters.BusinessNftTiersActivated, (event) => {
+      provider.on(eventFilters.BusinessNftTiersActivated, (event: any) => {
         // add event to db
         addEvent(event, 'BusinessNftTiersActivated');
       });
-      provider.on(eventFilters.BusinessNftTiersDeactivated, (event) => {
+      provider.on(eventFilters.BusinessNftTiersDeactivated, (event: any) => {
         // add event to db
         addEvent(event, 'BusinessNftTiersDeactivated');
       });
-      provider.on(eventFilters.BusinessRegistered, (event) => {
+      provider.on(eventFilters.BusinessRegistered, (event: any) => {
         // add event to db
         addEvent(event, 'BusinessRegistered');
       });
-      provider.on(eventFilters.BusinessRegisteredByOwner, (event) => {
+      provider.on(eventFilters.BusinessRegisteredByOwner, (event: any) => {
         // add event to db
         addEvent(event, 'BusinessRegisteredByOwner');
       });
-      provider.on(eventFilters.ServiceProviderDivisionAdded, (event) => {
+      provider.on(eventFilters.ServiceProviderDivisionAdded, (event: any) => {
         // add event to db
         addEvent(event, 'ServiceProviderDivisionAdded');
       });
-      provider.on(eventFilters.ServiceProvidersRegistered, (event) => {
+      provider.on(eventFilters.ServiceProvidersRegistered, (event: any) => {
         // add event to db
         addEvent(event, 'ServiceProvidersRegistered');
       });
-      provider.on(eventFilters.ServiceProvidersRemoved, (event) => {
+      provider.on(eventFilters.ServiceProvidersRemoved, (event: any) => {
         // add event to db
         addEvent(event, 'ServiceProvidersRemoved');
       });
-      provider.on(eventFilters.RewardTokensGenerated, (event) => {
+      provider.on(eventFilters.RewardTokensGenerated, (event: any) => {
         // add event to db
         addEvent(event, 'RewardTokensGenerated');
       });
-      provider.on(eventFilters.RewardDistributionCreated, (event) => {
+      provider.on(eventFilters.RewardDistributionCreated, (event: any) => {
         // add event to db
         addEvent(event, 'RewardDistributionCreated');
       });
-      provider.on(eventFilters.RewardTokensClaimed, (event) => {
+      provider.on(eventFilters.RewardTokensClaimed, (event: any) => {
         // add event to db
         addEvent(event, 'RewardTokensClaimed');
       });
@@ -122,7 +122,7 @@ async function contractEventListener() {
       clearTimeout(pingTimeout);
     });
 
-    provider._websocket.on('error', (error) => {
+    provider._websocket.on('error', (error: any) => {
       console.log('Websocket Error: ', error);
       provider._websocket.terminate();
     });
@@ -131,4 +131,4 @@ async function contractEventListener() {
   }
 }
 
-contractEventListener();
+// export default contractEventListener();
