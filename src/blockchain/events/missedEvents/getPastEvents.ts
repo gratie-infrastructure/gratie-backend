@@ -7,7 +7,7 @@ const rpcUrl = process.env.RPC_URL;
 const eventQueryBlockRange: any = process.env.EVENT_QUERY_BLOCK_RANGE;
 
 
-async function getPastEvents(eventName: string | ethers.ethers.EventFilter, startBlockNumber = 0) {
+async function getPastEvents(eventName: string | ethers.EventFilter, startBlockNumber = 0) {
   try {
     const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
     const contract = new ethers.Contract(contractAddress, contractABI, provider);
