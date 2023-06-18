@@ -1,4 +1,8 @@
 import {ethers} from 'ethers';
+import {CONS} from '../../../abstractions/constant';
+import Company from '../../../components/company/company.schema';
+import companyService from '../../../components/company/company.service';
+import {CompanyApproveParam} from '../../../components/company/company.interface';
 import contractABI from '../abi/gratie.abi.json';
 const contractIface = new ethers.utils.Interface(contractABI);
 
@@ -52,6 +56,18 @@ async function addEvent(event:any, eventName:string, wasMissed = false) {
           paymentAmount: event.args.paymentAmount.toString(),
           timestamp: event.args.timestamp.toString(),
         };
+        const dbData:any = {
+          name: event.args.name,
+          email: event.args.email,
+          status: CONS.TRANSACTION.STATUS.pending,
+          tier: event.args.businessNftTier.toString(),
+          distribution: 0,
+          walletAddr: event.args.by,
+        };
+        const company = await Company.findOne({email: eventData.email});
+        if (!company) {
+          await Company.create(dbData);
+        }
         break;
       case 'BusinessRegisteredByOwner':
         eventData = {
@@ -65,6 +81,18 @@ async function addEvent(event:any, eventName:string, wasMissed = false) {
           divisions: event.args.divisions.map((div: any) => div.toString()),
           timestamp: event.args.timestamp.toString(),
         };
+        const dbDataOwner:any = {
+          name: event.args.name,
+          email: event.args.email,
+          status: CONS.TRANSACTION.STATUS.pending,
+          tier: event.args.businessNftTier.toString(),
+          distribution: 0,
+          walletAddr: event.args.by,
+        };
+        const companyOwner = await Company.findOne({email: eventData.email});
+        if (!companyOwner) {
+          await Company.create(dbDataOwner);
+        }
         break;
       case 'ServiceProviderDivisionAdded':
         eventData = {
@@ -86,6 +114,13 @@ async function addEvent(event:any, eventName:string, wasMissed = false) {
           usdcPlatformFeePaid: event.args.usdcPlatformFeePaid.toString(),
           timestamp: event.args.timestamp.toString(),
         };
+        const apiData:CompanyApproveParam = {
+          walletAddresses: eventData.addresses,
+          companyWalletAddr: eventData.by,
+          status: CONS.TRANSACTION.STATUS.approve,
+          transactionHash: event.transactionHash,
+        };
+        await companyService.approveUser(apiData);
         break;
       case 'ServiceProvidersRemoved':
         eventData = {

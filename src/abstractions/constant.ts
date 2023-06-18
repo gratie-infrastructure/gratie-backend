@@ -10,6 +10,7 @@ export const CONS = {
   },
   TRANSACTION: {
     STATUS: {
+      pending: 'PENDING',
       approve: 'APPROVE',
       reject: 'REJECT',
     },
@@ -21,6 +22,15 @@ export const CONS = {
       companyApproval: 'COMPANYAPPROVAL',
       userApproval: 'USERAPPROVAL',
       nftMint: 'NFTMINT',
+      tokenMint: 'TOKENMINT',
+    },
+    TIER: {
+      '1': 'Mini',
+      '2': 'Bantom',
+      '3': 'Fractal',
+      '4': 'Optical',
+      '5': 'Paradise',
+      '6': 'Cosmos',
     },
   },
 };

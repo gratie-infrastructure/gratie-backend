@@ -21,3 +21,10 @@ export interface CompanyApproveParam {
     status:string,
     transactionHash:string
 }
+
+export interface signParam {
+    paymentMethod: string,
+    paymentAmount: bigint,
+    tierID: string,
+    buyer: string,
+}

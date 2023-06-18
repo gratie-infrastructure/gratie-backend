@@ -6,6 +6,8 @@ import TransactionService from '../transaction/transaction.service';
 import Transaction from '../transaction/transaction.schema';
 import {CONS} from '../../abstractions/constant';
 import companyService from './company.service';
+import generateSignature from './../../blockchain/generateSignature';
+import {signParam} from './company.interface';
 
 // const query: Record<string, any>[] = [
 //   {
@@ -62,12 +64,27 @@ export default new class CompanyController {
   }
 
   async nftPurchase(req: Request, res: Response) {
-    return res.json({tokenAddress: req.body.tokenAddress, tokenAmount: req.body.tokenAmount, purchaseSignature: 'sfgsdfg234234'});
+    console.log('sdfdsfsdf', req.body);
+    try {
+      const signParams:signParam = {
+        paymentMethod: req.body.paymentMethod,
+        paymentAmount: req.body.paymentAmount,
+        tierID: req.body.tierID,
+        buyer: req.body.buyer,
+      };
+      const purchaseSignature:any = await generateSignature(signParams);
+      if (purchaseSignature.error) {
+        throw new Error(purchaseSignature.message);
+      }
+      return res.json({purchaseSignature: purchaseSignature.data.signature});
+    } catch (err) {
+      res.status(Util.status.internalError).json(Util.getErrorMsg(err));
+    }
   }
 
   async userApproval(req: Request, res: Response) {
     companyService.approveUser(req.body);
-    return res.json({purchaseSignature: 'sfgsdfg234234'});
+    return res.json({purchaseSignature: 'sfgsdfg234234111111'});
   }
 
   async addUser(req: Request, res: Response) {
