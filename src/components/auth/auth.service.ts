@@ -18,8 +18,8 @@
 //               {
 //                 expiresIn: "2h",
 //               }
-//             );
-      
+//             )
+
 //             // save user token
 //             user.token = token;
 //     }

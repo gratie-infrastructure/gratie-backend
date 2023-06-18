@@ -1,10 +1,9 @@
-import {Request, Response, NextFunction} from "express";
-import Util from "../../lib/util";
+import {Request, Response} from 'express';
+import Util from '../../lib/util';
 // import AuthService from "./auth.service";
-import logger from "../../lib/logger";
+import logger from '../../lib/logger';
 
 export default new class AuthController {
-
   async login(req: Request, res:Response) {
     try {
     //   const token = await AuthService.botLogin();
