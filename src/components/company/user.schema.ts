@@ -1,17 +1,12 @@
-import { Schema, model, connect, Model } from 'mongoose';
+import {Schema, model, Model} from 'mongoose';
 import {IUser} from './user.interface';
 
 const optSchema = new Schema<IUser>({
-  
-  name: { required: true, type: String},
-  email: {type: String},
+  name: {required: true, type: String},
+  email: {required: true, type: String},
   status: {type: String, enum: ['APPROVE', 'REJECT']},
-  walletAddr: {type: String},
-  companyId: {
-    type: Schema.Types.ObjectId, 
-    required: true,
-    ref: "Company"
-  }
+  walletAddr: {type: String, required: true},
+  companies: [{type: String}],
 }, {timestamps: true});
 
 // export default model<IUser>('User', optSchema);

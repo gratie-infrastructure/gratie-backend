@@ -1,9 +1,8 @@
-import { Schema, model, connect, Model, Types } from 'mongoose';
-import {ICompany} from '../company/company.interface'
+import {Schema, model, Model, Types} from 'mongoose';
+import {ICompany} from '../company/company.interface';
 
 const optSchema = new Schema<ICompany>({
-  
-  name: { required: true, type: String},
+  name: {required: true, type: String},
   email: {type: String},
   status: {type: String, enum: ['APPROVE', 'REJECT']},
   tier: {type: String},
@@ -13,6 +12,7 @@ const optSchema = new Schema<ICompany>({
   tokenSymbol: {type: String},
   walletAddr: {type: String},
   fileLocationHash: {type: String},
+  users: [{type: String}],
 }, {timestamps: true});
 
 // export default model<IUser>('User', optSchema);
