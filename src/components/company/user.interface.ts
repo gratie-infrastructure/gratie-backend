@@ -1,9 +1,10 @@
-import { Schema} from 'mongoose';
+import {Types} from 'mongoose';
 
 export interface IUser {
+  _id: Types.ObjectId,
   name: string,
   email?: string,
   status?: string,
   walletAddr?: string,
-  companyId?: Schema.Types.ObjectId
-}
+  companies?: [string]
+};

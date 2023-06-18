@@ -1,72 +1,74 @@
-import { Request, Response } from 'express';
+import {Request, Response} from 'express';
 import Util from '../../lib/util';
 import Company from './company.schema';
 import User from './user.schema';
+import TransactionService from '../transaction/transaction.service';
 import Transaction from '../transaction/transaction.schema';
-import { sendEmail, sendUserEmail } from '../../lib/nodemailer';
+import {CONS} from '../../abstractions/constant';
+import companyService from './company.service';
 
-
-const query: Record<string, any>[] = [
-  {
-    '$match': {
-      'walletAddr': ''
-    }
-  }, {
-    '$lookup': {
-      'from': 'users', 
-      'localField': '_id', 
-      'foreignField': 'companyId', 
-      'as': 'result'
-    }
-  }
-]
+// const query: Record<string, any>[] = [
+//   {
+//     '$match': {
+//       'walletAddr': '',
+//     },
+//   }, {
+//     '$lookup': {
+//       'from': 'users',
+//       'localField': '_id',
+//       'foreignField': 'companyId',
+//       'as': 'result',
+//     },
+//   },
+// ];
 
 export default new class CompanyController {
-
   async createCompanyUsers(req: Request, res: Response) {
     try {
       const email = req.body?.email;
       if (!email) {
         throw new Error('Invalid Email Address');
       }
-      const company = await Company.findOne({ email: email });
+      const company = await Company.findOne({email: email});
       if (company) {
         throw new Error('CompanyUser Already Exist');
       }
       const CompanyData = await Company.create(req.body);
-      await this.createTransaction(req.body);
+      // await this.createTransaction(req.body);
       // sendEmail(req.body);
-      return res.json({ data: CompanyData });
+      return res.json({data: CompanyData});
     } catch (err) {
       res.status(Util.status.internalError).json(Util.getErrorMsg(err));
     }
   }
 
   async updateCompanyUser(req: Request, res: Response) {
-    console.log("awalletAddr", req.body.walletAddr);
+    console.log('awalletAddr', req.body.walletAddr);
     try {
       const email = req.body?.email;
       if (!email) {
-        throw new Error('Invalid Email Address');
+        throw new Error('Invalid Email Address1111');
       }
-      const company = await Company.findOne({ email: email });
+      const company = await Company.findOne({email: email});
       if (!company) {
         throw new Error('Company Not Exist');
       }
-      const CompanyData = await Company.findOneAndUpdate({walletAddr: req.body.walletAddr}, req.body);
+      await Company.findOneAndUpdate({walletAddr: req.body.walletAddr}, req.body);
       // sendEmail(req.body);
-      return res.json({ data: CompanyData });
+      return res.json({msg: 'Updated Sucessfully'});
     } catch (err) {
       res.status(Util.status.internalError).json(Util.getErrorMsg(err));
     }
   }
 
   async nftPurchase(req: Request, res: Response) {
-    return res.json({ purchaseSignature: 'sfgsdfg234234' });
+    return res.json({tokenAddress: req.body.tokenAddress, tokenAmount: req.body.tokenAmount, purchaseSignature: 'sfgsdfg234234'});
   }
 
   async userApproval(req: Request, res: Response) {
-    return res.json({ purchaseSignature: 'sfgsdfg234234' });
+    req.body.walletAddr;
+    companyService.approveUser(req.body);
+    return res.json({purchaseSignature: 'sfgsdfg234234'});
   }
 
   async addUser(req: Request, res: Response) {
@@ -75,13 +77,28 @@ export default new class CompanyController {
       if (!email) {
         throw new Error('Invalid Email Address');
       }
-      const company = await User.findOne({ email, companyId });
-      if (company) {
-        throw new Error('User Already Exist Under Company');
+      const company:any = await Company.findOne({_id: companyId});
+      if (!company) {
+        throw new Error('Company Not Exist');
       }
-      const CompanyData = await User.create(req.body);
-      sendUserEmail(req.body);
-      return res.json({ data: CompanyData });
+      // eslint-disable-next-line no-var
+      var user:any = await User.findOne({email, companies: {$in: companyId}});
+      if (user) {
+        throw new Error('User Already Exist Under Company');
+      } else {
+        user = await User.findOne({email});
+        if (user) {
+          const companies:[string] = user.companies;
+          companies.push(companyId);
+          await User.updateOne({email: email}, {companies: companies});
+          user = await User.findOne(email);
+        } else {
+          req.body.companies = [companyId];
+          user = await User.create(req.body);
+        }
+      }
+      // sendUserEmail(req.body);
+      return res.json({data: user});
     } catch (err) {
       res.status(Util.status.internalError).json(Util.getErrorMsg(err));
     }
@@ -93,18 +110,18 @@ export default new class CompanyController {
       const user = await Company.aggregate([
         {
           '$match': {
-            'walletAddr': walletAddr
-          }
+            'walletAddr': walletAddr,
+          },
         }, {
           '$lookup': {
-            'from': 'users', 
-            'localField': '_id', 
-            'foreignField': 'companyId', 
-            'as': 'result'
-          }
-        }
+            'from': 'users',
+            'localField': '_id',
+            'foreignField': 'companyId',
+            'as': 'result',
+          },
+        },
       ]);
-      return res.json({ data: user });
+      return res.json({data: user});
     } catch (err) {
       console.log(err);
       res.status(Util.status.internalError).json(Util.getErrorMsg(err));
@@ -113,10 +130,15 @@ export default new class CompanyController {
 
   async mintToken(req: Request, res: Response) {
     try {
-      const {body} = req;
-      const transaction = await Transaction.create(body);
-      return res.json({ data: transaction});
-    } catch(err) {
+      const args = req.body;
+      args.metaData = {
+        rewardTokenAmount: req.body.rewardTokenAmount,
+        rewardCycleId: req.body.rewardCycleId,
+      },
+      args.transactionType = CONS.TRANSACTION.TYPE.nftMint;
+      const transaction = await TransactionService.createTransaction(args);
+      return res.json({data: transaction});
+    } catch (err) {
       res.status(Util.status.internalError).json(Util.getErrorMsg(err));
     }
   }
@@ -129,13 +151,13 @@ export default new class CompanyController {
   async transaction(req: Request, res: Response) {
     try {
       const walletAddr = req.body.walletAddr;
-      const data = await Transaction.find({ walletAddr: walletAddr });
-      return res.json({ transaction: data });
+      const data = await Transaction.find({walletAddr: walletAddr});
+      return res.json({transaction: data});
     } catch (err) {
       console.log(err);
       res.status(Util.status.internalError).json(Util.getErrorMsg(err));
     }
   }
-}
+};
 
 
