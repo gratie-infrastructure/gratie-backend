@@ -42,7 +42,9 @@ async function generateSignature(params:signParam) {
     const params = {
       FunctionName: lambdaFunctionName,
       Payload: JSON.stringify({
-        data: [domain, types, data],
+        domain: domain,
+        types: types,
+        data: data,
       }),
     };
     console.log('params', params);
