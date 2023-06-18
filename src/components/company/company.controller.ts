@@ -66,7 +66,6 @@ export default new class CompanyController {
   }
 
   async userApproval(req: Request, res: Response) {
-    req.body.walletAddr;
     companyService.approveUser(req.body);
     return res.json({purchaseSignature: 'sfgsdfg234234'});
   }

@@ -5,6 +5,8 @@ import User from './user.schema';
 import {CONS} from '../../abstractions/constant';
 import Company from './company.schema';
 import {IUser} from './user.interface';
+import TransactionService from './../transaction/transaction.service';
+
 
 
 export default new class CompanyService {
@@ -23,6 +25,20 @@ export default new class CompanyService {
         await Company.findOneAndUpdate({_id: company._id}, {users: users});
       }
     });
+    return true;
+  };
+
+  signAndApprove = async (args: any) => {
+    const company:ICompany = await Company.findOne({walletAddr: args.walletAddr});
+    await Company.findOneAndUpdate({_id: company._id}, {
+      status: CONS.TRANSACTION.STATUS.approve,
+      rewardSignatureHash: 'sdfsdf12323',
+    });
+    args.metaData = {
+      rewardSignatureHash: args.rewardSignatureHash,
+    },
+    args.transactionType = CONS.TRANSACTION.TYPE.companyApproval;
+    await TransactionService.createTransaction(args);
     return true;
   };
 };

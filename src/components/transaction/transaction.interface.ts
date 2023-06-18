@@ -8,4 +8,4 @@ export default interface ITransaction {
     metaData: JSON,
     walletAddr: string,
     transactionHash?: string,
-};
+}
