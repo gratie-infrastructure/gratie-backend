@@ -8,7 +8,6 @@ import {IUser} from './user.interface';
 import TransactionService from './../transaction/transaction.service';
 
 
-
 export default new class CompanyService {
   approveUser = async (args: CompanyApproveParam) => {
     const company:ICompany = await Company.findOne({walletAddr: args.companyWalletAddr});
@@ -29,7 +28,14 @@ export default new class CompanyService {
   };
 
   signAndApprove = async (args: any) => {
-    const company:ICompany = await Company.findOne({walletAddr: args.walletAddr});
+    const allowedAdmin = process.env.ADMIN_WALLET_ADDRESS;
+    if (!allowedAdmin.includes(args.walletAddr)) {
+      throw new Error('Admin only allowed for this action');
+    }
+    const company:ICompany = await Company.findOne({_id: args.companyId});
+    if (!company) {
+      throw new Error('Company not found');
+    }
     await Company.findOneAndUpdate({_id: company._id}, {
       status: CONS.TRANSACTION.STATUS.approve,
       rewardSignatureHash: 'sdfsdf12323',
