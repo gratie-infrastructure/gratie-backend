@@ -35,6 +35,7 @@ export default new class CompanyController {
       if (company) {
         throw new Error('CompanyUser Already Exist');
       }
+      req.body['status'] = CONS.TRANSACTION.STATUS.pending;
       const CompanyData = await Company.create(req.body);
       // await this.createTransaction(req.body);
       // sendEmail(req.body);
@@ -55,6 +56,7 @@ export default new class CompanyController {
       if (!company) {
         throw new Error('Company Not Exist');
       }
+      req.body['status'] = CONS.TRANSACTION.STATUS.pending;
       await Company.findOneAndUpdate({walletAddr: req.body.walletAddr}, req.body);
       // sendEmail(req.body);
       return res.json({msg: 'Updated Sucessfully'});
@@ -64,7 +66,6 @@ export default new class CompanyController {
   }
 
   async nftPurchase(req: Request, res: Response) {
-    console.log('sdfdsfsdf', req.body);
     try {
       const signParams:signParam = {
         paymentMethod: req.body.paymentMethod,
@@ -120,9 +121,23 @@ export default new class CompanyController {
     }
   }
 
+  async getCompany(req: Request, res: Response) {
+    try {
+      const walletAddr = req.query.walletAddr;
+      const company = await Company.findOne({walletAddr: walletAddr});
+      if (company) {
+        return res.json({data: company});
+      } else {
+        throw new Error('Company Not found');
+      }
+    } catch (err) {
+      res.status(Util.status.internalError).json(Util.getErrorMsg(err));
+    }
+  }
+
   async listUsers(req: Request, res: Response) {
     try {
-      const walletAddr = req.body.walletAddr;
+      const walletAddr = req.query.walletAddr;
       const user = await Company.aggregate([
         {
           '$match': {

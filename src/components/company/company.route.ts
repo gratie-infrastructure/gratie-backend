@@ -8,6 +8,7 @@ companyRoute
     .put('/update', companyController.updateCompanyUser)
     .post('/user', companyController.addUser)
     .get('/list', companyController.listUsers)
+    .get('/', companyController.getCompany)
     .get('/transaction', companyController.transaction)
     .post('/nft/purchase', companyController.nftPurchase)
     .post('/user/approval', companyController.userApproval)

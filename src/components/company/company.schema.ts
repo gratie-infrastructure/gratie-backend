@@ -10,7 +10,7 @@ const optSchema = new Schema<ICompany>({
   distribution: {type: Types.Decimal128},
   tokenName: {type: String},
   tokenSymbol: {type: String},
-  walletAddr: {type: String},
+  walletAddr: {type: String, required: true},
   fileLocationHash: {type: String},
   users: [{type: String}],
 }, {timestamps: true});
