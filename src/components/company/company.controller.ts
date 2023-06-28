@@ -135,6 +135,20 @@ export default new class CompanyController {
     }
   }
 
+  async getAllCompany(req: Request, res: Response) {
+    try {
+      const status = req.query.status ? req.query.status : 'PENDING';
+      const companies = await Company.find({status: status});
+      if (companies) {
+        return res.json({data: companies});
+      } else {
+        throw new Error('Company Not found');
+      }
+    } catch (err) {
+      res.status(Util.status.internalError).json(Util.getErrorMsg(err));
+    }
+  }
+
   async listUsers(req: Request, res: Response) {
     try {
       const walletAddr = req.query.walletAddr;
