@@ -4,7 +4,7 @@ import {ICompany} from '../company/company.interface';
 const optSchema = new Schema<ICompany>({
   name: {required: true, type: String},
   email: {type: String},
-  status: {type: String, enum: ['APPROVE', 'REJECT']},
+  status: {type: String, enum: ['APPROVE', 'PENDING', 'REJECT']},
   tier: {type: String},
   valuation: {type: Types.Decimal128},
   distribution: {type: Types.Decimal128},
