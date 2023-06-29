@@ -90,27 +90,34 @@ export default new class CompanyController {
 
   async addUser(req: Request, res: Response) {
     try {
-      const {email, companyId} = req.body;
-      if (!email) {
-        throw new Error('Invalid Email Address');
+      const {walletAddr, email, companyId} = req.body;
+      if (!walletAddr) {
+        throw new Error('Invalid walletAddr');
       }
+      console.log('email', email);
+      console.log('walletAddr', walletAddr);
       const company:any = await Company.findOne({_id: companyId});
       if (!company) {
         throw new Error('Company Not Exist');
       }
       // eslint-disable-next-line no-var
-      var user:any = await User.findOne({email, companies: {$in: companyId}});
+      var user:any = await User.findOne({walletAddr: walletAddr, companies: {$elemMatch: {id: Object(companyId)}}});
       if (user) {
-        throw new Error('User Already Exist Under Company');
+        throw new Error('User Already Exist Under Company111');
       } else {
-        user = await User.findOne({email});
+        user = await User.findOne({walletAddr});
+        const companies:[{}] = user ? user.companies : [];
+        companies.push({
+          id: company._id,
+          email: email,
+          status: 'PENDING',
+        });
         if (user) {
-          const companies:[string] = user.companies;
-          companies.push(companyId);
-          await User.updateOne({email: email}, {companies: companies});
-          user = await User.findOne(email);
+          const userUpdated = await User.updateOne({walletAddr: walletAddr}, {companies: companies});
+          console.log('userUpdated', userUpdated);
+          user = await User.findOne({walletAddr: walletAddr});
         } else {
-          req.body.companies = [companyId];
+          req.body.companies = companies;
           user = await User.create(req.body);
         }
       }
@@ -152,20 +159,21 @@ export default new class CompanyController {
   async listUsers(req: Request, res: Response) {
     try {
       const walletAddr = req.query.walletAddr;
-      const user = await Company.aggregate([
-        {
-          '$match': {
-            'walletAddr': walletAddr,
-          },
-        }, {
-          '$lookup': {
-            'from': 'users',
-            'localField': '_id',
-            'foreignField': 'companyId',
-            'as': 'result',
-          },
-        },
-      ]);
+      // const user = await Company.aggregate([
+      //   {
+      //     '$match': {
+      //       'walletAddr': walletAddr,
+      //     },
+      //   }, {
+      //     '$lookup': {
+      //       'from': 'users',
+      //       'localField': '_id',
+      //       'foreignField': 'companyId',
+      //       'as': 'result',
+      //     },
+      //   },
+      // ]);
+      const user = await User.find({walletAddr: walletAddr});
       return res.json({data: user});
     } catch (err) {
       console.log(err);

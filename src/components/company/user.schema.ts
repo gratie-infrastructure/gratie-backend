@@ -8,7 +8,7 @@ const optSchema = new Schema<IUser>({
   companies: [{
     id: {type: Schema.Types.ObjectId, required: true},
     email: {required: true, type: String},
-    status: {type: String, enum: ['APPROVED', 'REJECTED', 'SUSPENDED']},
+    status: {type: String, enum: ['PENDING', 'APPROVED', 'REJECTED', 'SUSPENDED']},
   }],
 }, {timestamps: true});
 
