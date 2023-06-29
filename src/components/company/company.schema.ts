@@ -3,14 +3,15 @@ import {ICompany} from '../company/company.interface';
 
 const optSchema = new Schema<ICompany>({
   name: {required: true, type: String},
+  tokenId: {required: true, type: Number},
   email: {type: String},
-  status: {type: String, enum: ['APPROVE', 'PENDING', 'REJECT']},
+  status: {type: String, enum: ['MINTED', 'APPROVED', 'PENDING', 'REJECTED']},
   tier: {type: String},
   valuation: {type: Types.Decimal128},
   distribution: {type: Types.Decimal128},
   tokenName: {type: String},
   tokenSymbol: {type: String},
-  walletAddr: {type: String, required: true},
+  walletAddr: {type: String, required: true, unique: true},
   fileLocationHash: {type: String},
   users: [{type: String}],
 }, {timestamps: true});

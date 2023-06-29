@@ -10,9 +10,10 @@ export const CONS = {
   },
   TRANSACTION: {
     STATUS: {
+      minted: 'MINTED',
       pending: 'PENDING',
-      approve: 'APPROVE',
-      reject: 'REJECT',
+      approved: 'APPROVED',
+      rejected: 'REJECTED',
     },
     USERS: {
       company: 'COMPANY',

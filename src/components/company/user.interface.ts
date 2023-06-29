@@ -6,5 +6,5 @@ export interface IUser {
   email?: string,
   status?: string,
   walletAddr?: string,
-  companies?: [string]
+  companies?: []
 };

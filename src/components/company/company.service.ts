@@ -16,7 +16,7 @@ export default new class CompanyService {
       const company:ICompany = await Company.findOne({walletAddr: args.companyWalletAddr});
       await User.findOneAndUpdate(
           {walletAddr: walletAddr, companyId: company._id},
-          {status: CONS.TRANSACTION.STATUS.approve},
+          {status: CONS.TRANSACTION.STATUS.approved},
       );
       const user:IUser = await User.findOne({walletAddr: walletAddr});
       if (user && !users.includes(user._id.toString())) {
@@ -37,7 +37,7 @@ export default new class CompanyService {
       throw new Error('Company not found');
     }
     await Company.findOneAndUpdate({_id: company._id}, {
-      status: CONS.TRANSACTION.STATUS.approve,
+      status: CONS.TRANSACTION.STATUS.approved,
       rewardSignatureHash: 'sdfsdf12323',
     });
     args.metaData = {

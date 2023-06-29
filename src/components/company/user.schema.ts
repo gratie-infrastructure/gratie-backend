@@ -4,9 +4,12 @@ import {IUser} from './user.interface';
 const optSchema = new Schema<IUser>({
   name: {required: true, type: String},
   email: {required: true, type: String},
-  status: {type: String, enum: ['APPROVE', 'REJECT']},
   walletAddr: {type: String, required: true},
-  companies: [{type: String}],
+  companies: [{
+    id: {type: Schema.Types.ObjectId, required: true},
+    email: {required: true, type: String},
+    status: {type: String, enum: ['APPROVED', 'REJECTED', 'SUSPENDED']},
+  }],
 }, {timestamps: true});
 
 // export default model<IUser>('User', optSchema);

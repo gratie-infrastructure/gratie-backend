@@ -58,8 +58,9 @@ async function addEvent(event:any, eventName:string, wasMissed = false) {
         };
         const dbData:any = {
           name: event.args.name,
+          tokenId: parseInt(event.businessId),
           email: event.args.email,
-          status: CONS.TRANSACTION.STATUS.pending,
+          status: CONS.TRANSACTION.STATUS.minted,
           tier: event.args.businessNftTier.toString(),
           distribution: 0,
           walletAddr: event.args.by,
@@ -83,8 +84,9 @@ async function addEvent(event:any, eventName:string, wasMissed = false) {
         };
         const dbDataOwner:any = {
           name: event.args.name,
+          tokenId: parseInt(event.businessId),
           email: event.args.email,
-          status: CONS.TRANSACTION.STATUS.pending,
+          status: CONS.TRANSACTION.STATUS.minted,
           tier: event.args.businessNftTier.toString(),
           distribution: 0,
           walletAddr: event.args.by,
@@ -117,7 +119,7 @@ async function addEvent(event:any, eventName:string, wasMissed = false) {
         const apiData:CompanyApproveParam = {
           walletAddresses: eventData.addresses,
           companyWalletAddr: eventData.by,
-          status: CONS.TRANSACTION.STATUS.approve,
+          status: CONS.TRANSACTION.STATUS.approved,
           transactionHash: event.transactionHash,
         };
         await companyService.approveUser(apiData);

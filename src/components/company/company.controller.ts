@@ -35,7 +35,7 @@ export default new class CompanyController {
       if (company) {
         throw new Error('CompanyUser Already Exist');
       }
-      req.body['status'] = CONS.TRANSACTION.STATUS.pending;
+      req.body['status'] = CONS.TRANSACTION.STATUS.minted;
       const CompanyData = await Company.create(req.body);
       // await this.createTransaction(req.body);
       // sendEmail(req.body);
@@ -56,7 +56,7 @@ export default new class CompanyController {
       if (!company) {
         throw new Error('Company Not Exist');
       }
-      req.body['status'] = CONS.TRANSACTION.STATUS.pending;
+      req.body['status'] = CONS.TRANSACTION.STATUS.minted;
       await Company.findOneAndUpdate({walletAddr: req.body.walletAddr}, req.body);
       // sendEmail(req.body);
       return res.json({msg: 'Updated Sucessfully'});
