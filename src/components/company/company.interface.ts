@@ -13,6 +13,7 @@ export interface ICompany {
     tokenSymbol?: string,
     walletAddr: string,
     fileLocationHash?: string,
+    rewardSignatureHash?: string,
     users?: [string]
 }
 

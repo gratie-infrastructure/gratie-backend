@@ -1,6 +1,5 @@
 import mongoose, {Schema, model, Model, Types} from 'mongoose';
 import {ICompany} from '../company/company.interface';
-import userSchema from './user.schema';
 
 const optSchema = new Schema<ICompany>({
   name: {required: true, type: String},
@@ -14,6 +13,7 @@ const optSchema = new Schema<ICompany>({
   tokenSymbol: {type: String},
   walletAddr: {type: String, required: true, unique: true},
   fileLocationHash: {type: String},
+  rewardSignatureHash: {type: String},
   users: [
     {
       user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},

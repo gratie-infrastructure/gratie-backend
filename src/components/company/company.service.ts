@@ -4,7 +4,6 @@ import {CompanyApproveParam, ICompany} from './company.interface';
 import User from './user.schema';
 import {CONS} from '../../abstractions/constant';
 import Company from './company.schema';
-import {IUser} from './user.interface';
 import TransactionService from './../transaction/transaction.service';
 
 
@@ -70,7 +69,7 @@ export default new class CompanyService {
     }
     await Company.findOneAndUpdate({_id: company._id}, {
       status: CONS.TRANSACTION.STATUS.approved,
-      rewardSignatureHash: 'sdfsdf12323',
+      rewardSignatureHash: args.rewardSignatureHash,
     });
     args.metaData = {
       rewardSignatureHash: args.rewardSignatureHash,
