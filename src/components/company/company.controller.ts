@@ -56,7 +56,7 @@ export default new class CompanyController {
       if (!company) {
         throw new Error('Company Not Exist');
       }
-      req.body['status'] = CONS.TRANSACTION.STATUS.minted;
+      req.body['status'] = CONS.TRANSACTION.STATUS.pending;
       await Company.findOneAndUpdate({walletAddr: req.body.walletAddr}, req.body);
       // sendEmail(req.body);
       return res.json({msg: 'Updated Sucessfully'});

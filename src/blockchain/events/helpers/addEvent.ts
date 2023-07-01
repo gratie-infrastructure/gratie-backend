@@ -58,7 +58,7 @@ async function addEvent(event:any, eventName:string, wasMissed = false) {
         };
         const dbData:any = {
           name: event.args.name,
-          tokenId: parseInt(event.businessId),
+          tokenId: parseInt(event.args.businessID),
           email: event.args.email,
           status: CONS.TRANSACTION.STATUS.minted,
           tier: event.args.businessNftTier.toString(),
@@ -84,7 +84,7 @@ async function addEvent(event:any, eventName:string, wasMissed = false) {
         };
         const dbDataOwner:any = {
           name: event.args.name,
-          tokenId: parseInt(event.businessId),
+          tokenId: parseInt(event.args.businessID),
           email: event.args.email,
           status: CONS.TRANSACTION.STATUS.minted,
           tier: event.args.businessNftTier.toString(),
