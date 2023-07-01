@@ -8,7 +8,7 @@ export default new class AdminController {
     try {
       const approvedCompany = await CompanyService.signAndApprove(req.body);
       console.log('approvedCompany', approvedCompany);
-      res.status(Util.status.ok).json({accessToken: approvedCompany});
+      res.status(Util.status.ok).json({approved: true});
     } catch (err) {
       logger.error(`Token validating getting error for user:${err.stack}`);
       res.status(Util.status.forbidden).send(Util.getErrorMsg(err));

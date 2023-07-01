@@ -9,19 +9,51 @@ import TransactionService from './../transaction/transaction.service';
 
 
 export default new class CompanyService {
-  approveUser = async (args: CompanyApproveParam) => {
-    const company:ICompany = await Company.findOne({walletAddr: args.companyWalletAddr});
-    const users:any = company.users || [];
-    args.walletAddresses.forEach(async (walletAddr:string) => {
-      const company:ICompany = await Company.findOne({walletAddr: args.companyWalletAddr});
-      await User.findOneAndUpdate(
-          {walletAddr: walletAddr, companyId: company._id},
-          {status: CONS.TRANSACTION.STATUS.approved},
+  approveUser = async (companyId: Object, userId: Object) => {
+    console.log('companyId', companyId);
+
+    console.log('userId', userId);
+    try {
+      // Update the user's status under the company
+      await Company.updateOne(
+          {
+            '_id': companyId,
+            'users.user': userId,
+          },
+          {
+            $set: {'users.$[elem].status': 'approved'},
+          },
+          {
+            arrayFilters: [{'elem.user': userId}],
+          },
       );
-      const user:IUser = await User.findOne({walletAddr: walletAddr});
-      if (user && !users.includes(user._id.toString())) {
-        users.push(user._id.toString());
-        await Company.findOneAndUpdate({_id: company._id}, {users: users});
+
+      // Update the company's status for the user
+      await User.updateOne(
+          {
+            '_id': userId,
+            'companies.company': companyId,
+          },
+          {
+            $set: {'companies.$[elem].status': 'approved'},
+          },
+          {
+            arrayFilters: [{'elem.company': companyId}],
+          },
+      );
+
+      console.log('User approved successfully.');
+    } catch (error) {
+      console.error('Failed to approve user:', error);
+    }
+  };
+
+  approveBulkUsers = async (args: CompanyApproveParam) => {
+    const company:ICompany = await Company.findOne({walletAddr: args.companyWalletAddr});
+    args.walletAddresses.forEach(async (walletAddr:string) => {
+      const user:any = await User.findOne({walletAddr: walletAddr, companies: {$elemMatch: {id: Object(company._id)}}});
+      if (user) {
+        await this.approveUser(company._id, user._id);
       }
     });
     return true;

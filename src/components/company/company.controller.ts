@@ -56,7 +56,9 @@ export default new class CompanyController {
       if (!company) {
         throw new Error('Company Not Exist');
       }
-      req.body['status'] = CONS.TRANSACTION.STATUS.pending;
+      if (company.status != CONS.TRANSACTION.STATUS.approved) {
+        req.body['status'] = CONS.TRANSACTION.STATUS.pending;
+      }
       await Company.findOneAndUpdate({walletAddr: req.body.walletAddr}, req.body);
       // sendEmail(req.body);
       return res.json({msg: 'Updated Sucessfully'});
@@ -84,7 +86,7 @@ export default new class CompanyController {
   }
 
   async userApproval(req: Request, res: Response) {
-    companyService.approveUser(req.body);
+    companyService.approveBulkUsers(req.body);
     return res.json({purchaseSignature: 'sfgsdfg234234111111'});
   }
 
@@ -108,7 +110,7 @@ export default new class CompanyController {
         user = await User.findOne({walletAddr});
         const companies:[{}] = user ? user.companies : [];
         companies.push({
-          id: company._id,
+          company: company._id,
           email: email,
           status: 'PENDING',
         });
@@ -120,6 +122,15 @@ export default new class CompanyController {
           req.body.companies = companies;
           user = await User.create(req.body);
         }
+        // const companyUsers:[{}] = company ? company.users : [];
+        // companyUsers.push({
+        //   id: user._id,
+        //   status: 'PENDING',
+        // });
+        await Company.updateOne(
+            {_id: company._id},
+            {$push: {users: {user: user._id, status: 'pending'}}},
+        );
       }
       // sendUserEmail(req.body);
       return res.json({data: user});
@@ -159,6 +170,7 @@ export default new class CompanyController {
   async listUsers(req: Request, res: Response) {
     try {
       const walletAddr = req.query.walletAddr;
+      const company = await Company.findOne({walletAddr: walletAddr});
       // const user = await Company.aggregate([
       //   {
       //     '$match': {
@@ -173,8 +185,7 @@ export default new class CompanyController {
       //     },
       //   },
       // ]);
-      const user = await User.find({walletAddr: walletAddr});
-      return res.json({data: user});
+      return res.json({data: company});
     } catch (err) {
       console.log(err);
       res.status(Util.status.internalError).json(Util.getErrorMsg(err));

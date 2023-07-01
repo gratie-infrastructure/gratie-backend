@@ -122,7 +122,7 @@ async function addEvent(event:any, eventName:string, wasMissed = false) {
           status: CONS.TRANSACTION.STATUS.approved,
           transactionHash: event.transactionHash,
         };
-        await companyService.approveUser(apiData);
+        await companyService.approveBulkUsers(apiData);
         break;
       case 'ServiceProvidersRemoved':
         eventData = {
