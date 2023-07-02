@@ -8,6 +8,7 @@ companyRoute
     .put('/update', companyController.updateCompany)
     .post('/user', companyController.addUser)
     .get('/user/list', companyController.listUsers)
+    .get('/user/companies', companyController.listCompanies)
     .get('/', companyController.getCompany)
     .get('/list', companyController.getAllCompany)
     .get('/transaction', companyController.transaction)

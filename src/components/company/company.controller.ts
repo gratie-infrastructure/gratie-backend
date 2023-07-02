@@ -208,6 +208,52 @@ export default new class CompanyController {
     }
   }
 
+  async listCompanies(req: Request, res: Response) {
+    try {
+      const {walletAddr} = req.query;
+
+      const companies = await User.aggregate([
+        {$match: {'walletAddr': walletAddr}},
+        {$unwind: '$companies'},
+        {
+          $lookup: {
+            'from': 'companies',
+            'localField': 'companies.company',
+            'foreignField': '_id',
+            'as': 'companyInfo',
+          },
+        },
+        {
+          $project: {
+            'companyInfo.companies': 0,
+          },
+        },
+        {
+          $unwind: '$companyInfo',
+        },
+        {
+          $group: {
+            _id: '$_id',
+            name: {$first: '$name'},
+            email: {$first: '$email'},
+            companies: {$push: '$companyInfo'},
+          },
+        },
+        {
+          $project: {
+            'companies.users': 0,
+          },
+        },
+      ]);
+
+      console.log('users', companies);
+      return res.json({data: companies});
+    } catch (err) {
+      console.log(err);
+      res.status(Util.status.internalError).json(Util.getErrorMsg(err));
+    }
+  }
+
   async mintToken(req: Request, res: Response) {
     try {
       const args = req.body;
