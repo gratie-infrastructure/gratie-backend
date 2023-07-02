@@ -5,7 +5,7 @@ const optSchema = new Schema<ICompany>({
   name: {required: true, type: String},
   tokenId: {required: true, type: Number},
   email: {type: String},
-  status: {type: Number},
+  status: {type: String},
   tier: {type: String},
   valuation: {type: Types.Decimal128},
   distribution: {type: Types.Decimal128},

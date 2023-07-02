@@ -5,7 +5,7 @@ export interface ICompany {
     tokenId: number,
     name: string,
     email: string,
-    status:number,
+    status: string,
     tier: string,
     valuation?: Types.Decimal128,
     distribution?: Types.Decimal128,
@@ -22,7 +22,7 @@ export interface ICompany {
 export interface CompanyApproveParam {
     walletAddresses:[],
     companyWalletAddr:string,
-    status:number,
+    status:string,
     transactionHash:string
 }
 

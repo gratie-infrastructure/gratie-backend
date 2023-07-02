@@ -10,21 +10,21 @@ export const CONS = {
   },
   TRANSACTION: {
     STATUS: {
-      minted: 1,
-      pending: 2,
-      approved: 3,
-      rejected: 4,
+      minted: 'MINTED',
+      pending: 'PENDING',
+      approved: 'APPROVED',
+      rejected: 'REJECTED',
     },
     USERS: {
       company: 'COMPANY',
       companyUser: 'COMPANYUSER',
     },
     TYPE: {
-      companyApprovalByAdmin: 1,
-      userApproval: 2,
-      nftMintCompany: 3, // company mint the NFT
-      tokenMintCompany: 4, // WHile generating the NFT Token
-      rewardTokenClaimByUser: 5,
+      companyApprovalByAdmin: 'COMPANY_APPROVAL_BY_ADMIN',
+      userApproval: 'USER_APPROVAL',
+      nftMintCompany: 'NFT_MINT_COMPANY', // company mint the NFT
+      tokenMintCompany: 'TOKEN_MINT_COMPANY', // WHile generating the NFT Token
+      rewardTokenClaimByUser: 'REWARD_TOKEN_CLAIM_BY_USER',
     },
     TIER: {
       '1': 'Mini',
