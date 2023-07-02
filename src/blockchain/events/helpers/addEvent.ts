@@ -22,6 +22,7 @@ async function addEvent(event:any, eventName:string, wasMissed = false) {
     }
 
     let eventData;
+    console.log("Event: ", event);
     switch (eventName) {
       // case 'BusinessNftTierAdded':
       //   eventData = {
