@@ -17,12 +17,12 @@ let totalWebsocketDisconnects = 0;
  */
 async function getAllMissedEvents() {
   try {
-    await getMissedEvents('BusinessNftTierAdded');
-    await getMissedEvents('BusinessNftTiersActivated');
-    await getMissedEvents('BusinessNftTiersDeactivated');
+    // await getMissedEvents('BusinessNftTierAdded');
+    // await getMissedEvents('BusinessNftTiersActivated');
+    // await getMissedEvents('BusinessNftTiersDeactivated');
     await getMissedEvents('BusinessRegistered');
     await getMissedEvents('BusinessRegisteredByOwner');
-    await getMissedEvents('ServiceProviderDivisionAdded');
+    // await getMissedEvents('ServiceProviderDivisionAdded');
     await getMissedEvents('ServiceProvidersRegistered');
     await getMissedEvents('ServiceProvidersRemoved');
     await getMissedEvents('RewardTokensGenerated');
