@@ -5,12 +5,14 @@ export interface ICompany {
     tokenId: number,
     name: string,
     email: string,
-    status:string,
+    status:number,
     tier: string,
     valuation?: Types.Decimal128,
     distribution?: Types.Decimal128,
+    tokenAddr?: string,
     tokenName?: string,
     tokenSymbol?: string,
+    tokenIconUrl?:string,
     walletAddr: string,
     fileLocationHash?: string,
     rewardSignatureHash?: string,
@@ -20,7 +22,7 @@ export interface ICompany {
 export interface CompanyApproveParam {
     walletAddresses:[],
     companyWalletAddr:string,
-    status:string,
+    status:number,
     transactionHash:string
 }
 

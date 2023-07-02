@@ -25,7 +25,7 @@ import {signParam} from './company.interface';
 // ];
 
 export default new class CompanyController {
-  async createCompanyUsers(req: Request, res: Response) {
+  async createCompany(req: Request, res: Response) {
     try {
       const email = req.body?.email;
       if (!email) {
@@ -45,7 +45,7 @@ export default new class CompanyController {
     }
   }
 
-  async updateCompanyUser(req: Request, res: Response) {
+  async updateCompany(req: Request, res: Response) {
     console.log('awalletAddr', req.body.walletAddr);
     try {
       const email = req.body?.email;
@@ -199,7 +199,7 @@ export default new class CompanyController {
         rewardTokenAmount: req.body.rewardTokenAmount,
         rewardCycleId: req.body.rewardCycleId,
       },
-      args.transactionType = CONS.TRANSACTION.TYPE.nftMint;
+      args.transactionType = CONS.TRANSACTION.TYPE.nftMintCompany;
       const transaction = await TransactionService.createTransaction(args);
       return res.json({data: transaction});
     } catch (err) {

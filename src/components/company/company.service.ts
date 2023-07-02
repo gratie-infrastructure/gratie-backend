@@ -74,7 +74,7 @@ export default new class CompanyService {
     args.metaData = {
       rewardSignatureHash: args.rewardSignatureHash,
     },
-    args.transactionType = CONS.TRANSACTION.TYPE.companyApproval;
+    args.transactionType = CONS.TRANSACTION.TYPE.companyApprovalByAdmin;
     await TransactionService.createTransaction(args);
     return true;
   };
