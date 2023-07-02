@@ -12,6 +12,7 @@ export const CONS = {
     STATUS: {
       minted: 'MINTED',
       pending: 'PENDING',
+      adminApproved: 'ADMIN_APPROVED',
       approved: 'APPROVED',
       rejected: 'REJECTED',
     },

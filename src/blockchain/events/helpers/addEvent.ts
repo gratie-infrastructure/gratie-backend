@@ -142,6 +142,7 @@ async function addEvent(event:any, eventName:string, wasMissed = false) {
           tokenSymbol: event.args.tokenSymbol.toString(),
           tokenIconUrl: event.args.tokenIconURL.toString(),
           amount: event.args.amount.toString(),
+          status: CONS.TRANSACTION.STATUS.approved,
         };
         Company.findOneAndUpdate({tokenId: parseInt(event.args.businessId)}, eventData);
         break;

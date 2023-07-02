@@ -68,7 +68,7 @@ export default new class CompanyService {
       throw new Error('Company not found');
     }
     await Company.findOneAndUpdate({_id: company._id}, {
-      status: CONS.TRANSACTION.STATUS.approved,
+      status: CONS.TRANSACTION.STATUS.adminApproved,
       rewardSignatureHash: args.rewardSignatureHash,
     });
     args.metaData = {
