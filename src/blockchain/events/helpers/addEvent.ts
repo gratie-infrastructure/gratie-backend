@@ -144,9 +144,7 @@ async function addEvent(event:any, eventName:string, wasMissed = false) {
           amount: event.args.amount.toString(),
           status: CONS.TRANSACTION.STATUS.approved,
         };
-        console.log('RewardTokensGeneratedRewardTokensGenerated', eventData);
-        console.log('businessId', event.args.businessId);
-        Company.findOneAndUpdate({tokenId: parseInt(event.args.businessId)}, eventData);
+        await Company.findOneAndUpdate({tokenId: parseInt(event.args.businessId)}, eventData);
         break;
       // case 'RewardDistributionCreated':
       //   eventData = {

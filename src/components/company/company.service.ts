@@ -50,7 +50,9 @@ export default new class CompanyService {
   approveBulkUsers = async (args: CompanyApproveParam) => {
     const company:ICompany = await Company.findOne({walletAddr: args.companyWalletAddr});
     args.walletAddresses.forEach(async (walletAddr:string) => {
-      const user:any = await User.findOne({walletAddr: walletAddr, companies: {$elemMatch: {id: Object(company._id)}}});
+      const user:any = await User.findOne({'walletAddr': walletAddr, 'companies.company': company._id});
+
+      // const user:any = await User.findOne({walletAddr: walletAddr, companies: {$elemMatch: {id: Object(company._id)}}});
       if (user) {
         await this.approveUser(company._id, user._id);
       }

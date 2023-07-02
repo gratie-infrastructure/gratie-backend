@@ -103,7 +103,7 @@ export default new class CompanyController {
         throw new Error('Company Not Exist');
       }
       // eslint-disable-next-line no-var
-      var user:any = await User.findOne({walletAddr: walletAddr, companies: {$elemMatch: {id: Object(companyId)}}});
+      var user:any = await User.findOne({'walletAddr': walletAddr, 'companies.company': company._id});
       if (user) {
         throw new Error('User Already Exist Under Company111');
       } else {
