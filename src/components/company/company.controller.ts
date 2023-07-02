@@ -169,23 +169,30 @@ export default new class CompanyController {
 
   async listUsers(req: Request, res: Response) {
     try {
-      const walletAddr = req.query.walletAddr;
-      const company = await Company.findOne({walletAddr: walletAddr});
-      // const user = await Company.aggregate([
-      //   {
-      //     '$match': {
-      //       'walletAddr': walletAddr,
-      //     },
-      //   }, {
-      //     '$lookup': {
-      //       'from': 'users',
-      //       'localField': '_id',
-      //       'foreignField': 'companyId',
-      //       'as': 'result',
-      //     },
-      //   },
-      // ]);
-      return res.json({data: company});
+      const {walletAddr, status} = req.query;
+
+      const users = await Company.aggregate([
+        {$match: {walletAddr: walletAddr}},
+        {$unwind: '$users'},
+        {$match: {'users.status': status}},
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'users.user',
+            foreignField: '_id',
+            as: 'allUsers',
+          },
+        },
+        {$unwind: '$allUsers'},
+        {
+          $project: {
+            'allUsers.companies': 0,
+          },
+        },
+      ]);
+
+      console.log('users', users);
+      return res.json({data: users});
     } catch (err) {
       console.log(err);
       res.status(Util.status.internalError).json(Util.getErrorMsg(err));

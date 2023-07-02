@@ -20,7 +20,7 @@ export default new class CompanyService {
             'users.user': userId,
           },
           {
-            $set: {'users.$[elem].status': 'approved'},
+            $set: {'users.$[elem].status': CONS.TRANSACTION.STATUS.approved},
           },
           {
             arrayFilters: [{'elem.user': userId}],
@@ -34,7 +34,7 @@ export default new class CompanyService {
             'companies.company': companyId,
           },
           {
-            $set: {'companies.$[elem].status': 'approved'},
+            $set: {'companies.$[elem].status': CONS.TRANSACTION.STATUS.approved},
           },
           {
             arrayFilters: [{'elem.company': companyId}],
