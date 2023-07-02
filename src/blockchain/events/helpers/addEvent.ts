@@ -138,7 +138,7 @@ async function addEvent(event:any, eventName:string, wasMissed = false) {
         break;
       case 'RewardTokensGenerated':
         eventData = {
-          rewardToken: event.args.rewardToken,
+          tokenAddr: event.args.rewardToken,
           tokenName: event.args.tokenName.toString(),
           tokenSymbol: event.args.tokenSymbol.toString(),
           tokenIconUrl: event.args.tokenIconURL.toString(),
