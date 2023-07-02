@@ -112,7 +112,7 @@ export default new class CompanyController {
         companies.push({
           company: company._id,
           email: email,
-          status: 'PENDING',
+          status: CONS.TRANSACTION.STATUS.pending,
         });
         if (user) {
           const userUpdated = await User.updateOne({walletAddr: walletAddr}, {companies: companies});
@@ -129,7 +129,7 @@ export default new class CompanyController {
         // });
         await Company.updateOne(
             {_id: company._id},
-            {$push: {users: {user: user._id, status: 'pending'}}},
+            {$push: {users: {user: user._id, status: CONS.TRANSACTION.STATUS.pending}}},
         );
       }
       // sendUserEmail(req.body);
@@ -155,7 +155,7 @@ export default new class CompanyController {
 
   async getAllCompany(req: Request, res: Response) {
     try {
-      const status = req.query.status ? req.query.status : 'PENDING';
+      const status = req.query.status ? req.query.status : CONS.TRANSACTION.STATUS.pending;
       const companies = await Company.find({status: status});
       if (companies) {
         return res.json({data: companies});
@@ -187,6 +187,15 @@ export default new class CompanyController {
         {
           $project: {
             'allUsers.companies': 0,
+          },
+        },
+        {
+          $group: {
+            _id: '$_id',
+            name: {$first: '$name'},
+            tokenId: {$first: '$tokenId'},
+            email: {$first: '$email'},
+            users: {$push: '$allUsers'},
           },
         },
       ]);
