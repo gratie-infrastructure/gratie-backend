@@ -75,7 +75,7 @@ export default new class CompanyController {
         tierID: req.body.tierID,
         buyer: req.body.buyer,
       };
-      const purchaseSignature:any = await generateSignature(signParams);
+      const purchaseSignature:any = await generateSignature('NFT_BUY', signParams);
       if (purchaseSignature.error) {
         throw new Error(purchaseSignature.message);
       }
