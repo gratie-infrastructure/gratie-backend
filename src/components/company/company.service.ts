@@ -61,7 +61,7 @@ export default new class CompanyService {
   };
 
   signAndApprove = async (args: any) => {
-    const allowedAdmin = process.env.ADMIN_WALLET_ADDRESS;
+    const allowedAdmin = process.env.ADMIN_WALLET_ADDRESS.split(',');
     if (!allowedAdmin.includes(args.walletAddr)) {
       throw new Error('Admin only allowed for this action');
     }

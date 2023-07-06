@@ -7,7 +7,8 @@ import Transaction from '../transaction/transaction.schema';
 import {CONS} from '../../abstractions/constant';
 import companyService from './company.service';
 import generateSignature from './../../blockchain/generateSignature';
-import {signParam} from './company.interface';
+import {signParam, mintParam} from './company.interface';
+import {ethers} from 'ethers';
 
 // const query: Record<string, any>[] = [
 //   {
@@ -48,9 +49,12 @@ export default new class CompanyController {
   async updateCompany(req: Request, res: Response) {
     console.log('awalletAddr', req.body.walletAddr);
     try {
-      const email = req.body?.email;
+      const {email, valuation, distribution} = req.body;
+      if (!valuation || !distribution) {
+        throw new Error('Invalid Valuation or Distribution');
+      }
       if (!email) {
-        throw new Error('Invalid Email Address1111');
+        throw new Error('Invalid Email Address');
       }
       const company = await Company.findOne({email: email});
       if (!company) {
@@ -60,8 +64,29 @@ export default new class CompanyController {
         req.body['status'] = CONS.TRANSACTION.STATUS.pending;
       }
       await Company.findOneAndUpdate({walletAddr: req.body.walletAddr}, req.body);
-      // sendEmail(req.body);
-      return res.json({msg: 'Updated Sucessfully'});
+
+      const signParams:mintParam = {
+        businessId: company.tokenId,
+        amount: ethers.utils.parseUnits(valuation.toString(), 18),
+        lockInPercentage: distribution * 100,
+      };
+
+      const tokenMintSign = await generateSignature('TOKEN_MINT', signParams);
+      const firstAdminWalletAddr = process.env.ADMIN_WALLET_ADDRESS.split(',')[0];
+      if (tokenMintSign?.data?.signature) {
+        const args = {
+          'transactionType': CONS.TRANSACTION.TYPE.companyApprovalByAdmin,
+          'walletAddr': firstAdminWalletAddr,
+          'companyId': company._id,
+          'rewardSignatureHash': tokenMintSign?.data?.signature,
+        };
+        const approvedCompany = await companyService.signAndApprove(args);
+        console.log('approvedCompany', approvedCompany);
+        // sendEmail(req.body);
+        return res.json({msg: 'Updated Sucessfully'});
+      } else {
+        throw new Error('Something went wrong');
+      }
     } catch (err) {
       res.status(Util.status.internalError).json(Util.getErrorMsg(err));
     }

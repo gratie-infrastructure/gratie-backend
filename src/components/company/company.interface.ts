@@ -1,3 +1,4 @@
+import { BigNumber } from 'ethers';
 import {Types} from 'mongoose';
 
 export interface ICompany {
@@ -31,4 +32,10 @@ export interface signParam {
     paymentAmount: bigint,
     tierID: string,
     buyer: string,
+}
+
+export interface mintParam {
+    businessId: number,
+    amount: BigNumber,
+    lockInPercentage: number,
 }
