@@ -171,6 +171,7 @@ async function addEvent(event:any, eventName:string, wasMissed = false) {
           transactionType: CONS.TRANSACTION.TYPE.rewardTokenClaimByUser,
         };
         await TransactionService.createTransaction(args);
+        await companyService.rewardTokenClaimed(args.walletAddr, event.args.businessId.toString());
         break;
     };
     console.log(eventData);

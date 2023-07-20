@@ -20,7 +20,7 @@ export default new class CompanyService {
             'users.user': userId,
           },
           {
-            $set: {'users.$[elem].status': CONS.TRANSACTION.STATUS.approved},
+            $set: {'users.$[elem].status': CONS.TRANSACTION.STATUS.notClaimed},
           },
           {
             arrayFilters: [{'elem.user': userId}],
@@ -34,7 +34,7 @@ export default new class CompanyService {
             'companies.company': companyId,
           },
           {
-            $set: {'companies.$[elem].status': CONS.TRANSACTION.STATUS.approved},
+            $set: {'companies.$[elem].status': CONS.TRANSACTION.STATUS.notClaimed},
           },
           {
             arrayFilters: [{'elem.company': companyId}],
@@ -58,6 +58,55 @@ export default new class CompanyService {
       }
     });
     return true;
+  };
+
+  rewardTokenClaimed = async (walletAddr:string, companyId:String) => {
+    const company:ICompany = await Company.findOne({tokenId: companyId});
+    const user:any = await User.findOne({'walletAddr': walletAddr, 'companies.company': company._id});
+    // const user:any = await User.findOne({walletAddr: walletAddr, companies: {$elemMatch: {id: Object(company._id)}}});
+    if (user) {
+      await this.updateClaim(company._id, user._id);
+    }
+    return true;
+  };
+
+  updateClaim = async (companyId: Object, userId: Object) => {
+    console.log('companyId', companyId);
+
+    console.log('userId', userId);
+    try {
+      // Update the user's status under the company
+      await Company.updateOne(
+          {
+            '_id': companyId,
+            'users.user': userId,
+          },
+          {
+            $set: {'users.$[elem].status': CONS.TRANSACTION.STATUS.claimed},
+          },
+          {
+            arrayFilters: [{'elem.user': userId}],
+          },
+      );
+
+      // Update the company's status for the user
+      await User.updateOne(
+          {
+            '_id': userId,
+            'companies.company': companyId,
+          },
+          {
+            $set: {'companies.$[elem].status': CONS.TRANSACTION.STATUS.claimed},
+          },
+          {
+            arrayFilters: [{'elem.company': companyId}],
+          },
+      );
+
+      console.log('User approved successfully.');
+    } catch (error) {
+      console.error('Failed to approve user:', error);
+    }
   };
 
   signAndApprove = async (args: any) => {

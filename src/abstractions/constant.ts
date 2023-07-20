@@ -15,6 +15,8 @@ export const CONS = {
       adminApproved: 'ADMIN_APPROVED',
       approved: 'APPROVED',
       rejected: 'REJECTED',
+      notClaimed: 'NOT CLAIMED',
+      claimed: 'CLAIMED',
     },
     USERS: {
       company: 'COMPANY',
