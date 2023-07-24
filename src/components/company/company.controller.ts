@@ -249,12 +249,12 @@ export default new class CompanyController {
           },
         },
         {
-          $project: {
-            'companyInfo.companies': 0,
-          },
+          $unwind: '$companyInfo',
         },
         {
-          $unwind: '$companyInfo',
+          $addFields: {
+            'companyInfo.tokenStatus': '$companies.status',
+          },
         },
         {
           $group: {
