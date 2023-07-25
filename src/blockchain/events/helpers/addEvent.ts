@@ -4,7 +4,7 @@ import Company from '../../../components/company/company.schema';
 import ITransaction from '../../../components/transaction/transaction.interface';
 import TransactionService from '../../../components/transaction/transaction.service';
 import companyService from '../../../components/company/company.service';
-import {CompanyApproveParam} from '../../../components/company/company.interface';
+import {CompanyApproveParam, ICompany} from '../../../components/company/company.interface';
 import contractABI from '../abi/gratie.abi.json';
 const contractIface = new ethers.utils.Interface(contractABI);
 
@@ -22,7 +22,7 @@ async function addEvent(event:any, eventName:string, wasMissed = false) {
     }
 
     let eventData;
-    console.log("Event: ", event);
+    console.log('Event: ', event);
     switch (eventName) {
       // case 'BusinessNftTierAdded':
       //   eventData = {
@@ -160,9 +160,10 @@ async function addEvent(event:any, eventName:string, wasMissed = false) {
       //   };
       //   break;
       case 'RewardTokensClaimed':
+        const rewardCompany: ICompany = await Company.findOne({tokenId: parseInt(event.args.businessID)});
         const args: ITransaction = {
           walletAddr: event.args.by,
-          companyId: event.args.businessId.toString(),
+          companyId: Object(rewardCompany._id),
           metaData: {
             distributionNo: event.args.distributionNo.toString(),
             rewardToken: event.args.rewardToken,
@@ -171,7 +172,7 @@ async function addEvent(event:any, eventName:string, wasMissed = false) {
           transactionType: CONS.TRANSACTION.TYPE.rewardTokenClaimByUser,
         };
         await TransactionService.createTransaction(args);
-        await companyService.rewardTokenClaimed(args.walletAddr, event.args.businessId.toString());
+        await companyService.rewardTokenClaimed(args.walletAddr, parseInt(event.args.businessID));
         break;
     };
     console.log(eventData);

@@ -60,8 +60,8 @@ export default new class CompanyService {
     return true;
   };
 
-  rewardTokenClaimed = async (walletAddr:string, companyId:String) => {
-    const company:ICompany = await Company.findOne({tokenId: companyId});
+  rewardTokenClaimed = async (walletAddr:string, tokenId:number) => {
+    const company:ICompany = await Company.findOne({tokenId: tokenId});
     const user:any = await User.findOne({'walletAddr': walletAddr, 'companies.company': company._id});
     // const user:any = await User.findOne({walletAddr: walletAddr, companies: {$elemMatch: {id: Object(company._id)}}});
     if (user) {
